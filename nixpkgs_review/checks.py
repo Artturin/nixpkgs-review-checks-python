@@ -1,0 +1,2 @@
+def checks():
+    print("checks")
