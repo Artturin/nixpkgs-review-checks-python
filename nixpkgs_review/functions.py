@@ -1,18 +1,29 @@
-import subprocess
-import os
-import requests
-from pprint import pprint
-from jq import jq
 import json
-here = os.path.abspath(os.path.dirname(__file__))
+import os
+import subprocess
 
-def test_func(name):
-    print("hi " + name)
+from github import Github
+from jq import jq
+import requests
+here = os.path.abspath(os.path.dirname(__file__))
 
 def ghtoken():
     token = os.getenv('GITHUB_TOKEN')
-    print(token)
     return token
+
+def ghapi(request, PR="", text=""):
+    g = Github(ghtoken())
+    repo = g.get_repo("NixOS/nixpkgs")
+    pr = repo.get_pull(PR)
+    if request == "myuser":
+         return g.get_user().login
+    elif request == "pruser":
+        return pr.user.login
+    elif request == "prstatus":
+        return pr.state
+    elif request == "gist":
+        text = "hi"
+        
 
 def tb(input):
     text = subprocess.run(["tail", "-20000"], text=True, input=input, stdout=subprocess.PIPE)
@@ -59,7 +70,8 @@ def ofborg_state(PR):
     r = requests.post(url, headers=headers, json={"query": text, "variables": variables}).text
     
     arch = subprocess.check_output(["nix-instantiate", "--eval", "--json", "--expr", "builtins.currentSystem"], text=True).replace('"', '')
-    print(jq(f".[][][][][][][][][][][][][]|select(.name | contains(\"passthru.tests on {arch}\")).conclusion").transform(json.loads(r)))
+    status = jq(f".[][][][][][][][][][][][][]|select(.name | contains(\"passthru.tests on {arch}\")).conclusion").transform(json.loads(r))
+    return status
 
 
 

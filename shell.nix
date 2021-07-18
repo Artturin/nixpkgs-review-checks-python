@@ -7,6 +7,7 @@ mkShell rec {
       setuptools
       requests
       jq
+      PyGithub
 
     ];
   in 

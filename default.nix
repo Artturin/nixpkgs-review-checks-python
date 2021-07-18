@@ -17,6 +17,7 @@ python3Packages.buildPythonPackage rec {
   propagatedBuildInputs = with python3Packages; [
     requests
     jq
+    PyGithub
   ];
 
   #pythonImportsCheck = [ "CHANGE" ];

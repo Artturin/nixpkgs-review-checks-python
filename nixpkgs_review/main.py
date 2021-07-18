@@ -1,8 +1,9 @@
-from nixpkgs_review.checks import checks
-from nixpkgs_review.review import review
-from nixpkgs_review.functions import ofborg_state
-import sys
 import argparse
+import sys
+
+from nixpkgs_review.checks import checks
+from nixpkgs_review.functions import *
+from nixpkgs_review.review import review
 
 def arguments():
     parser = argparse.ArgumentParser()
@@ -10,24 +11,20 @@ def arguments():
     parser.add_argument("--checks")
     args = parser.parse_args()
 
-    #if args.review:
-    #    print(args.review)
-    #    review
-    #    
-
-    #if args.checks:
-    #    checks
-    #    print(args.checks)
-
     return args
 
 
 
 def main():
     args = arguments()
-
-    print(args)
-    ofborg_state(args.review)
+    PR = args.review
+    print(ghapi("prstatus", PR))
+    if ghapi("prstatus", PR) == "open":
+        print("test")
+    #print(args)
+    #pr_status = ghapi("pruser", PR)
+    #print(pr_status)
+    #print(ofborg_state(PR))
 
 if __name__ == "__main__":
     sys.exit(main())
